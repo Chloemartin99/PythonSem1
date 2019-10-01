@@ -1,7 +1,6 @@
-s = "azcbobobegghakl"
+s = "chloestuvo"
 current = ""
 longest = ""
-store=[]
 
 for i in s:
     if current=="":
@@ -9,7 +8,9 @@ for i in s:
 
     if i< current[-1]:
         if len(current) > len(longest):
-            store.append(current)
+            if s[0]==current[0]:
+                current = current[1:]
+
             longest = current
 
         current = i
@@ -19,4 +20,3 @@ for i in s:
 
 
 print(longest)
-print(store)
