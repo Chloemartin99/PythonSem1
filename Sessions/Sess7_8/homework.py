@@ -1,4 +1,4 @@
-s = "chloestuvo"
+s = "azcbobobegghakl"
 current = ""
 longest = ""
 
