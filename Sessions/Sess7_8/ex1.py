@@ -2,6 +2,6 @@
 hi = "Hello"
 i = len(hi)-1
 
-while (i>=0):
+while i>=0:
     print(hi[i])
     i=i-1

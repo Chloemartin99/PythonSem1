@@ -12,11 +12,9 @@ for i in s:
                 current = current[1:]
 
             longest = current
-
         current = i
 
     else:
         current = current+i
-
 
 print(longest)

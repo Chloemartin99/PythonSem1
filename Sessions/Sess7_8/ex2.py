@@ -1,8 +1,11 @@
-#HarryPotter example
-text = "mystring!lol"
-punctuation = ",.!;:"
-for p in punctuation:
-    text = text.replace(p, " ")
+fd = open("Potter", "r")
+#incomplete
+punctuation = ",.:!?()[]{}-*<>’‘'"
+lines = []
+for line in fd:
+    for p in punctuation:
+        line = line.replace(p, " ")
 
-words = text.split(" ")
-print(words)
+    lines = lines+line.split()
+
+print(lines)
