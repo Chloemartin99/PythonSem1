@@ -78,6 +78,12 @@ class Hand(object):
     def __lt__(self, other):
         return ranks.index(self.get_rank()) < ranks.index(other.get_rank())
 
+    #four of a kind: its either 25555 or 6666A (when you have sorted it): /
+    # if number 2 != number 4 --> false or if
+
+
+
+
 new_deck = Deck()
 new_deck.shuffle()
 print(new_deck)

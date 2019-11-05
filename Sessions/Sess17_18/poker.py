@@ -66,46 +66,41 @@ class Hand(object):
         for i in range(5):
             for j in range(i + 1, 5):
                 if self.cards[i].get_rank() == self.cards[j].get_rank():
-                    counter += 1
-                    pairs_rank.append(self.cards[i].get_rank())
-
+                    if self.cards[i].get_rank() in pairs_rank:
+                        break
+                    else:
+                        counter += 1
+                        pairs_rank.append(self.cards[i].get_rank())
         if counter == 2:
             return True, pairs_rank
+
         else:
             return False, pairs_rank
 
     def is_flush(self):
-        check = True
         suit = self.cards[0].get_suit()
         for i in range(5):
             if self.cards[i].get_suit()!=suit:
-                check= False
-                break
-
-        return check
+                return False
+        return True
 
     def is_straight(self):
-        check = True
-
         rank_numbers = []
         for i in range(5):
             number = ranks.index(self.cards[i].get_rank())
             rank_numbers.append(number)
 
         rank_numbers.sort()
-
         for i in range(5):
             j = i + 1
             if j < 5:
                 if rank_numbers[j] - rank_numbers[i] != 1:
-                    check = False
-                    break
-        return check
+                    return False
+        return True
 
     def is_straight_flush(self):
-        check = True
         if hand.is_flush() == False:
-            check= False
+            return False
 
         else:
             rank_numbers = []
@@ -114,63 +109,84 @@ class Hand(object):
                 rank_numbers.append(number)
 
             rank_numbers.sort()
+            if rank_numbers[0] == 0 and \
+                    rank_numbers[1] == 1 and \
+                    rank_numbers[2] == 2 and \
+                    rank_numbers[3] == 3 and \
+                    rank_numbers[4] == 12:
+                return True
 
             for i in range(5):
                 j = i + 1
                 if j < 5:
                     if rank_numbers[j] - rank_numbers[i] != 1:
-                        check = False
-                        break
-        return check
+                        return False
+                    else:
+                        return True
 
     def is_royal_flush(self):  # A, K, Q, J, 10, all the same suit.
-        check = True
-
         if hand.is_flush() == False:
-            check = False
+            return False
 
         else:
-            royal = ["A", "K", "Q", "J", "10"]
+            rank_numbers = []
             for i in range(5):
-                for r in royal:
-                    if self.cards[i].get_rank()!=r:
-                        check = False
-                        break
-        return check
+                number = ranks.index(self.cards[i].get_rank())
+                rank_numbers.append(number)
+
+            rank_numbers.sort()
+            if rank_numbers[0] == 8 and \
+                    rank_numbers[1] == 9 and \
+                    rank_numbers[2] == 10 and \
+                    rank_numbers[3] == 11 and \
+                    rank_numbers[4] == 12:
+                return True
+        return False
 
     def is_x_of_a_kind(self):
-        condition, pair_rank = hand.is_pair()
         counter = 0
+        condition, pair_rank = hand.is_pair()
+
         if condition == False:
-            return False, 0
+            return 0
 
-        else:
-            for i in range(5):
-                if self.cards[i].get_rank() == pair_rank:
-                    counter+=1
-
+        for i in range(5):
+            if self.cards[i].get_rank() == pair_rank:
+                counter+=1
         if counter==4:
-            return True, 4
-
+            return 4
         elif counter==3:
-            return True, 3
-
+            return 3
         else:
-            return False, 0
+            return 0
+
+    def is_three_of_a_kind(self):
+        if hand.is_x_of_a_kind() == 3:
+            return True
+
+    def is_four_of_a_kind(self):
+        if hand.is_x_of_a_kind() == 4:
+            return True
 
     def is_full_house(self):
-        check = True
-        bool, pairs_rank = hand.is_two_pair()
+        condition, pairs_rank = hand.is_two_pair()
+        if condition == False:
+            return False
 
-        if bool == False:
-            check = False
-
-        elif bool == True:
+        else:
+            remaining_card = []
             for i in range(5):
-                if self.cards[i].get_rank()!= pairs_rank[0] or self.cards[i].get_rank()!= pairs_rank[1]:
-                    check = False
-                    break
-        return check
+                remaining_card.append(self.cards[i].get_rank())
+
+            for i in range(2):
+                while pairs_rank[i] in remaining_card:
+                    remaining_card.remove(pairs_rank[i])
+
+            if len(remaining_card) == 0:
+                return True
+
+            else:
+                return False
 
 royal_flush = 0
 straight_flush = 0
@@ -183,9 +199,7 @@ two_pair = 0
 pair = 0
 nothing = 0
 
-count = 0
-
-while count<25:
+for count in range(100):
     new_deck = Deck()
     new_deck.shuffle()
     print(new_deck)
@@ -202,7 +216,7 @@ while count<25:
         print('Straight Flush')
         continue
 
-    elif (True, 4) in hand.is_x_of_a_kind():
+    elif hand.is_four_of_a_kind() == True:
         four_of_a_kind+=1
         print('Four of a Kind')
         continue
@@ -222,8 +236,8 @@ while count<25:
         print('Straight')
         continue
 
-    elif (True, 3) in hand.is_x_of_a_kind():
-        three_of_a_kind+=1
+    elif hand.is_three_of_a_kind() == True:
+        three_of_a_kind += 1
         print('Three of a Kind')
         continue
 
@@ -235,15 +249,14 @@ while count<25:
     elif True in hand.is_pair():
         pair+=1
         print('Pair')
+        continue
 
     else:
         nothing+=1
         print('Nothing')
 
-    count+=1
-
 print('Summary & statistics out of 10000 hands: ')
-print('     Royal Flush: ',royal_flush,' times. Probability:  ',royal_flush/10000)
+print('     Royal Flush: ',royal_flush,' times. Probability:  ', (royal_flush/10000))
 print('     Straight Flush: ',straight_flush,' times. Probability:  ',straight_flush/10000)
 print('     Four of a Kind: ',four_of_a_kind,' times. Probability:  ',four_of_a_kind/10000)
 print('     Full House: ',full_house,' times. Probability:  ',full_house/10000)
@@ -253,3 +266,5 @@ print('     Three of a Kihd: ',three_of_a_kind,' times. Probability:  ',three_of
 print('     Two Pair: ',two_pair,' times. Probability:  ',two_pair/10000)
 print('     Pair: ',pair,' times. Probability:  ',pair/10000)
 print('     Nothing: ',nothing,' times. Probability:  ',nothing/10000)
+
+total = royal_flush+straight_flush+four_of_a_kind+full_house+flush+straight+three_of_a_kind+two_pair+pair+nothing
