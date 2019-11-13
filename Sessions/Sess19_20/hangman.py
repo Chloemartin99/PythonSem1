@@ -52,7 +52,7 @@ def checkLetter(chosen_letters):
         lb.grid(row=10, column=1)
     window.update_idletasks()
 
-input_letter = StringVar()
+input_letter = StringVar(window)
 et = Entry(master=window, textvariable=input_letter, font=("Helvetica", 20), fg="blue")
 et.grid(row=6, column=1)
 
