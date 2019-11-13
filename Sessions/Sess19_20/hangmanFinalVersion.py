@@ -91,7 +91,6 @@ lb_pos.grid(row=3, column=2)
 lb = Label(master=window, text="Choose Letter:", font=font)
 lb.grid(row=8, column=1, sticky="e")
 
-crossed = "--------------------------"
 let="abcdefghijklmnopqrstuvwxyz"
 letter_choice = []
 for i in let:
